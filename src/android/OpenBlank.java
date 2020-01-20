@@ -33,5 +33,7 @@ public class OpenBlank extends CordovaPlugin {
             }
 
         }
+
+        return false;
     }
 }
