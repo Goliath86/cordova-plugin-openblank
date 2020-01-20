@@ -13,20 +13,25 @@ public class OpenBlank extends CordovaPlugin {
     @Override
     public boolean onOverrideUrlLoading(String url) {
         Log.d("OpenBlank", "onOverrideUrlLoading called with URL " + url);
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            // Omitting the MIME type for file: URLs causes "No Activity found to handle Intent".
-            // Adding the MIME type to http: URLs causes them to not be handled by the downloader.
-            Uri uri = Uri.parse(url);
-            if ("http".equals(uri.getScheme()) || "https".equals(uri.getScheme())) {
-                webView.sendJavascript("cordova.InAppBrowser.open('" + url + "', '_blank');");
-            } else {
+
+        if(url.indexOf("2checkout") > -1) {
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                // Omitting the MIME type for file: URLs causes "No Activity found to handle Intent".
+                // Adding the MIME type to http: URLs causes them to not be handled by the downloader.
+                Uri uri = Uri.parse(url);
+                if ("http".equals(uri.getScheme()) || "https".equals(uri.getScheme())) {
+                    webView.sendJavascript("cordova.InAppBrowser.open('" + url + "', '_blank');");
+                } else {
+                    return false;
+                }
+                return true; // true prevents navigation navigation
+            } catch (android.content.ActivityNotFoundException e) {
+                Log.d("OpenBlank", "OpenBlank: Error loading url " + url + ":" + e.toString());
                 return false;
             }
-            return true; // true prevents navigation navigation
-        } catch (android.content.ActivityNotFoundException e) {
-            Log.d("OpenBlank", "OpenBlank: Error loading url " + url + ":" + e.toString());
-            return false;
+
         }
     }
 }
